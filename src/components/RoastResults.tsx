@@ -4,19 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RoastResponse } from '@/services/roastingService';
 
 interface RoastResultsProps {
-  roastData: {
-    overallScore: number;
-    roastText: string;
-    audioSummary: string;
-    flashcards: Array<{
-      title: string;
-      problem: string;
-      solution: string;
-      severity: 'low' | 'medium' | 'high' | 'critical';
-    }>;
-  };
+  roastData: RoastResponse;
   onNewRoast: () => void;
 }
 
@@ -125,6 +116,8 @@ export const RoastResults: React.FC<RoastResultsProps> = ({ roastData, onNewRoas
         <TabsContent value="audio">
           <Card className="card-brutal p-6">
             <div className="space-y-6">
+              {/* Audio Summary Section - Only show if available */}
+            {roastData.audioSummary && (
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-bold text-accent flex items-center">
                   <Volume2 className="mr-2 h-6 w-6" />
@@ -147,6 +140,7 @@ export const RoastResults: React.FC<RoastResultsProps> = ({ roastData, onNewRoas
                   )}
                 </Button>
               </div>
+            )}
               
               <div className="bg-muted/30 rounded-lg p-6">
                 <div className="flex items-center space-x-4">

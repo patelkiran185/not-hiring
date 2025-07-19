@@ -1,84 +1,42 @@
 import React, { useState } from 'react';
-import { Flame, Github, Twitter, Zap, Shield, Target } from 'lucide-react';
+import { Flame, Github, Twitter, Zap, Shield, Target, Upload, Brain, Lightbulb, TrendingUp, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ResumeUpload } from '@/components/ResumeUpload';
 import { LoadingRoast } from '@/components/LoadingRoast';
 import { RoastResults } from '@/components/RoastResults';
+import { RoastingService, RoastResponse } from '@/services/roastingService';
 import heroImage from '@/assets/hero-roast.jpg';
 
 type AppState = 'upload' | 'roasting' | 'results';
 
 const Index = () => {
   const [appState, setAppState] = useState<AppState>('upload');
-  const [roastData, setRoastData] = useState<any>(null);
+  const [roastData, setRoastData] = useState<RoastResponse | null>(null);
+  const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
 
-  const handleResumeSubmit = (resumeText: string) => {
+  const handleResumeSubmit = async (resumeText: string) => {
     setAppState('roasting');
     
-    // Simulate AI processing
-    setTimeout(() => {
-      const mockRoastData = {
-        overallScore: Math.floor(Math.random() * 60) + 20, // 20-80 range for dramatic effect
-        roastText: `Oh boy, where do I even begin with this digital trainwreck? 
-
-Let's start with your "objective" section - you know, that cringe-inducing paragraph that screams "I have no idea what I want." "Seeking opportunities to leverage my skills" is corporate speak for "I'm desperate and will take anything." 
-
-Your work experience reads like a grocery list written by someone who's never seen a grocery store. "Responsible for" appears 47 times - congratulations, you've managed to sound responsible for absolutely nothing specific. 
-
-Skills section: "Proficient in Microsoft Office" - it's 2024, not 1995. That's like saying you're proficient in breathing. And "Good communication skills" while misspelling three words in your contact info? The irony is *chef's kiss*.
-
-Your education section suggests you attended the University of Generic Achievements, majoring in Buzzword Management with a minor in Template Following.
-
-But hey, at least your formatting is consistent... consistently amateur. Those bullet points have more alignment issues than a shopping cart with three broken wheels.
-
-The real kicker? Your email address. Nothing says "hire me for a professional position" like TotallyAwesome69@email.com.
-
-In summary: This resume has the persuasive power of wet cardboard and the professional appeal of a toddler's crayon drawing. But don't worry - even disasters can be fixed with enough effort and a complete rewrite.`,
-        audioSummary: "Audio summary of brutal feedback",
-        flashcards: [
-          {
-            title: "Generic Objective Statement",
-            problem: "Your objective is corporate word salad that says nothing about what you actually want or offer.",
-            solution: "Replace with a specific professional summary highlighting your unique value proposition and career goals.",
-            severity: "high"
-          },
-          {
-            title: "Overuse of 'Responsible for'",
-            problem: "Starting every bullet point with 'responsible for' makes you sound passive and boring.",
-            solution: "Use action verbs that demonstrate impact: 'Led', 'Increased', 'Developed', 'Achieved'.",
-            severity: "critical"
-          },
-          {
-            title: "Outdated Skills Section",
-            problem: "Listing basic computer skills like Microsoft Office is redundant in modern job markets.",
-            solution: "Focus on technical skills, programming languages, or industry-specific software relevant to your field.",
-            severity: "medium"
-          },
-          {
-            title: "Unprofessional Email Address",
-            problem: "Your email address undermines your professional credibility before anyone reads your resume.",
-            solution: "Create a professional email using your name: firstname.lastname@provider.com",
-            severity: "critical"
-          },
-          {
-            title: "Poor Formatting Consistency",
-            problem: "Inconsistent formatting makes your resume look sloppy and unprofessional.",
-            solution: "Use consistent fonts, spacing, and alignment. Consider using a professional template.",
-            severity: "medium"
-          },
-          {
-            title: "Lack of Quantifiable Achievements",
-            problem: "No numbers or metrics to demonstrate the impact of your work.",
-            solution: "Add specific numbers: '% improvement', 'dollar amounts saved', 'team size managed'.",
-            severity: "high"
-          }
-        ]
-      };
+    try {
+      // Submit to roasting service
+      const response = await RoastingService.submitResume({
+        resumeText,
+        options: {
+          brutality: 'savage', // Maximum brutality for the full experience
+          includeAudio: true,
+        }
+      });
       
-      setRoastData(mockRoastData);
+      setRoastData(response);
       setAppState('results');
-    }, 5000); // 5 second delay for dramatic effect
+    } catch (error) {
+      console.error('Roasting failed:', error);
+      // Handle error - could show error state or fallback to mock data
+      setAppState('upload');
+      // You might want to show an error message here
+    }
   };
 
   const handleNewRoast = () => {
@@ -139,6 +97,7 @@ In summary: This resume has the persuasive power of wet cardboard and the profes
               <Button 
                 variant="ghost-brutal" 
                 size="lg"
+                onClick={() => setIsHowItWorksOpen(true)}
                 className="text-lg px-8 py-6"
               >
                 <Shield className="mr-2 h-5 w-5" />
@@ -187,6 +146,150 @@ In summary: This resume has the persuasive power of wet cardboard and the profes
           </div>
         )}
       </div>
+
+      {/* How It Works Dialog */}
+      <Dialog open={isHowItWorksOpen} onOpenChange={setIsHowItWorksOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl border border-accent/20 shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-4xl font-black text-brutal mb-4 flex items-center justify-center">
+              <Flame className="mr-3 h-8 w-8 text-primary animate-glow" />
+              How the Roasting Works
+            </DialogTitle>
+            <DialogDescription className="text-lg text-muted-foreground text-center max-w-2xl mx-auto">
+              Get ready for a brutal but transformative journey that will turn your mediocre resume into a career-launching weapon.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid md:grid-cols-2 gap-8 mt-8">
+            {/* Step 1 */}
+            <div className="relative">
+              <Card className="p-6 bg-gradient-to-br from-card/80 to-card/60 border-primary/20 hover:border-primary/40 transition-all duration-300 backdrop-blur-sm">
+                <div className="flex items-center mb-4">
+                  <div className="bg-primary/20 p-3 rounded-full mr-4">
+                    <Upload className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">1. Upload & Parse</h3>
+                    <p className="text-sm text-accent">The Sacrifice Begins</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Upload your resume and watch our AI dissect it like a surgeon. We extract every word, 
+                  analyze formatting, and identify the telltale signs of template mediocrity.
+                </p>
+              </Card>
+              <div className="absolute -bottom-4 -right-4 bg-primary/10 rounded-full p-2">
+                <span className="text-2xl">📄</span>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative">
+              <Card className="p-6 bg-gradient-to-br from-card/80 to-card/60 border-accent/20 hover:border-accent/40 transition-all duration-300 backdrop-blur-sm">
+                <div className="flex items-center mb-4">
+                  <div className="bg-accent/20 p-3 rounded-full mr-4">
+                    <Brain className="h-6 w-6 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">2. AI Analysis</h3>
+                    <p className="text-sm text-primary">The Brutal Truth</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Our AI doesn't sugar-coat anything. It identifies clichés, weak language, formatting disasters, 
+                  and missed opportunities with the precision of a career assassin.
+                </p>
+              </Card>
+              <div className="absolute -bottom-4 -right-4 bg-accent/10 rounded-full p-2">
+                <span className="text-2xl">🧠</span>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative">
+              <Card className="p-6 bg-gradient-to-br from-card/80 to-card/60 border-secondary/20 hover:border-secondary/40 transition-all duration-300 backdrop-blur-sm">
+                <div className="flex items-center mb-4">
+                  <div className="bg-secondary/20 p-3 rounded-full mr-4">
+                    <Lightbulb className="h-6 w-6 text-secondary-glow" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">3. Roast & Insights</h3>
+                    <p className="text-sm text-secondary-glow">The Awakening</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Receive a brutally honest roast that exposes every flaw, followed by actionable flashcards 
+                  that show you exactly how to fix each problem.
+                </p>
+              </Card>
+              <div className="absolute -bottom-4 -right-4 bg-secondary/10 rounded-full p-2">
+                <span className="text-2xl">💡</span>
+              </div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="relative">
+              <Card className="p-6 bg-gradient-to-br from-card/80 to-card/60 border-primary/20 hover:border-primary/40 transition-all duration-300 backdrop-blur-sm">
+                <div className="flex items-center mb-4">
+                  <div className="bg-primary/20 p-3 rounded-full mr-4">
+                    <TrendingUp className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground">4. Level Up</h3>
+                    <p className="text-sm text-primary">The Transformation</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Armed with harsh truths and clear solutions, rebuild your resume into a interview-generating, 
+                  career-accelerating masterpiece that actually gets results.
+                </p>
+              </Card>
+              <div className="absolute -bottom-4 -right-4 bg-primary/10 rounded-full p-2">
+                <span className="text-2xl">🚀</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Warning Box */}
+          <Card className="mt-8 p-6 bg-gradient-to-r from-destructive/10 via-accent/10 to-primary/10 border border-primary/30">
+            <div className="flex items-center justify-center mb-4">
+              <Flame className="h-6 w-6 text-primary mr-2" />
+              <h4 className="text-xl font-bold text-primary">Fair Warning</h4>
+              <Flame className="h-6 w-6 text-primary ml-2" />
+            </div>
+            <p className="text-center text-muted-foreground">
+              This roast will be <span className="text-primary font-bold">merciless</span>. 
+              Your feelings might get hurt, but your career will thank you. 
+              Only proceed if you can handle the <span className="text-accent font-bold">unfiltered truth</span>.
+            </p>
+          </Card>
+
+          {/* Action Buttons */}
+          <div className="flex justify-center gap-4 mt-8">
+            <Button 
+              variant="roast" 
+              size="lg"
+              onClick={() => {
+                setIsHowItWorksOpen(false);
+                const uploadSection = document.getElementById('upload-section');
+                uploadSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-8 py-3"
+            >
+              <Flame className="mr-2 h-5 w-5" />
+              I'm Ready to Get Roasted
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="lg"
+              onClick={() => setIsHowItWorksOpen(false)}
+              className="px-6 py-3"
+            >
+              Maybe Later
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="bg-card/50 border-t border-border py-12">
