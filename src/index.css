@@ -138,7 +138,7 @@
 
   .btn-roast {
     @apply bg-primary text-primary-foreground font-black px-8 py-4 rounded-xl;
-    @apply hover:bg-primary-glow transform hover:scale-110 transition-all duration-400;
+    @apply hover:bg-primary-glow transform hover:scale-110 transition-all duration-300;
     @apply shadow-brutal hover:shadow-glow;
     @apply border-2 border-primary hover:border-primary-glow;
   }
@@ -158,13 +158,13 @@
 
   .card-glow {
     @apply bg-gradient-to-br from-card to-muted border border-accent/20 rounded-xl p-6;
-    @apply shadow-purple hover:shadow-glow transition-all duration-400;
+    @apply shadow-purple hover:shadow-glow transition-all duration-300;
     @apply relative overflow-hidden;
   }
 
   .card-glow::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-glow opacity-0 hover:opacity-100 transition-opacity duration-400;
+    @apply absolute inset-0 bg-gradient-glow opacity-0 hover:opacity-100 transition-opacity duration-300;
   }
 
   /* Animation Classes */
