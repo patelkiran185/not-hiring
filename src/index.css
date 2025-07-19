@@ -119,76 +119,152 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground overflow-x-hidden;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    overflow-x: hidden;
   }
 }
 
 /* Custom Component Styles */
-@layer components {
-  /* Brutal Button Variants */
-  .btn-brutal {
-    @apply bg-gradient-to-r from-primary to-secondary text-primary-foreground font-bold px-6 py-3 rounded-lg;
-    @apply hover:shadow-brutal transform hover:scale-105 transition-all duration-300;
-    @apply border border-primary/20 hover:border-primary/40;
-  }
+.btn-brutal {
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--secondary)));
+  color: hsl(var(--primary-foreground));
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--primary) / 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
 
-  .btn-roast {
-    @apply bg-primary text-primary-foreground font-black px-8 py-4 rounded-xl;
-    @apply hover:bg-primary-glow transform hover:scale-110 transition-all duration-300;
-    @apply shadow-brutal hover:shadow-glow;
-    @apply border-2 border-primary hover:border-primary-glow;
-  }
+.btn-brutal:hover {
+  box-shadow: var(--shadow-brutal);
+  transform: scale(1.05);
+  border-color: hsl(var(--primary) / 0.4);
+}
 
-  .btn-ghost-brutal {
-    @apply bg-transparent border-2 border-accent text-accent font-bold px-6 py-3 rounded-lg;
-    @apply hover:bg-accent hover:text-accent-foreground transform hover:scale-105;
-    @apply transition-all duration-300 hover:shadow-purple;
-  }
+.btn-roast {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 900;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  border: 2px solid hsl(var(--primary));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+  box-shadow: var(--shadow-brutal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
 
-  /* Card Variants */
-  .card-brutal {
-    @apply bg-card border border-border rounded-xl p-6;
-    @apply shadow-lg hover:shadow-brutal transition-all duration-300;
-    @apply hover:border-primary/20 hover:transform hover:scale-[1.02];
-  }
+.btn-roast:hover {
+  background: hsl(var(--primary-glow));
+  border-color: hsl(var(--primary-glow));
+  transform: scale(1.1);
+  box-shadow: var(--shadow-glow);
+}
 
-  .card-glow {
-    @apply bg-gradient-to-br from-card to-muted border border-accent/20 rounded-xl p-6;
-    @apply shadow-purple hover:shadow-glow transition-all duration-300;
-    @apply relative overflow-hidden;
-  }
+.btn-ghost-brutal {
+  background: transparent;
+  border: 2px solid hsl(var(--accent));
+  color: hsl(var(--accent));
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
 
-  .card-glow::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-glow opacity-0 hover:opacity-100 transition-opacity duration-300;
-  }
+.btn-ghost-brutal:hover {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  transform: scale(1.05);
+  box-shadow: var(--shadow-purple);
+}
 
-  /* Animation Classes */
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
+/* Card Variants */
+.card-brutal {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  .animate-pulse-brutal {
-    animation: pulse-brutal 2s ease-in-out infinite;
-  }
+.card-brutal:hover {
+  box-shadow: var(--shadow-brutal);
+  border-color: hsl(var(--primary) / 0.2);
+  transform: scale(1.02);
+}
 
-  .animate-glow {
-    animation: glow 3s ease-in-out infinite alternate;
-  }
+.card-glow {
+  background: linear-gradient(to bottom right, hsl(var(--card)), hsl(var(--muted)));
+  border: 1px solid hsl(var(--accent) / 0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-purple);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
 
-  /* Text Effects */
-  .text-brutal {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent font-black;
-  }
+.card-glow:hover {
+  box-shadow: var(--shadow-glow);
+}
 
-  .text-glow {
-    @apply text-accent;
-    text-shadow: 0 0 20px hsl(var(--accent));
-  }
+.card-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-glow);
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+/* Animation Classes */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-brutal {
+  animation: pulse-brutal 2s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+/* Text Effects */
+.text-brutal {
+  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent)));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 900;
+}
+
+.text-glow {
+  color: hsl(var(--accent));
+  text-shadow: 0 0 20px hsl(var(--accent));
 }
 
 /* Keyframe Animations */
